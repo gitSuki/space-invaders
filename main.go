@@ -16,6 +16,7 @@ func main() {
 	bullets := []Bullet{}
 	enemies := []Enemy{}
 	shouldShoot := true
+	framesUntilCanShoot := int32(0)
 
 	rl.InitWindow(screenSize, screenSize, "Space Invaders")
 
@@ -69,6 +70,15 @@ func main() {
 		isInputtingShoot := rl.IsKeyDown(rl.KeySpace)
 		if isInputtingShoot && shouldShoot {
 			bullets = appendBullet(bullets, playerCoordinates[0], playerCoordinates[1])
+			shouldShoot = false
+			framesUntilCanShoot = 30
+		}
+
+		if framesUntilCanShoot > 0 {
+			framesUntilCanShoot--
+			if framesUntilCanShoot == 0 {
+				shouldShoot = true
+			}
 		}
 
 		rl.EndDrawing()
