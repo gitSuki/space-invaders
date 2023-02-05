@@ -1,6 +1,8 @@
 package main
 
-import rl "github.com/gen2brain/raylib-go/raylib"
+import (
+	rl "github.com/gen2brain/raylib-go/raylib"
+)
 
 func main() {
 	screenSize := int32(600)
@@ -16,6 +18,17 @@ func main() {
 		rl.ClearBackground(rl.RayWhite)
 		rl.DrawTexture(backgroundImg, 0, 0, rl.White)
 		rl.DrawTexture(playerImg, playerCoordinates[0], playerCoordinates[1], rl.White)
+
+		isInputtingRight := rl.IsKeyDown(rl.KeyD) || rl.IsKeyDown(rl.KeyRight)
+		isInputtingLeft := rl.IsKeyDown((rl.KeyA)) || rl.IsKeyDown(rl.KeyLeft)
+
+		if isInputtingRight && !(playerCoordinates[0] > (screenSize - 75)) {
+			playerCoordinates[0] += 1
+		}
+		if isInputtingLeft && !(playerCoordinates[0] <= 25) {
+			playerCoordinates[0] -= 1
+		}
+
 		rl.EndDrawing()
 	}
 	rl.CloseWindow()
