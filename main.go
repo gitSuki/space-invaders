@@ -4,12 +4,6 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-type Enemy struct {
-	posX int32
-	posY int32
-	img  rl.Texture2D
-}
-
 func main() {
 	screenSize := int32(600)
 	rl.InitWindow(screenSize, screenSize, "Space Invaders")
@@ -27,8 +21,8 @@ func main() {
 	}
 	bullets := []Bullet{}
 	enemies := []Enemy{}
-
 	enemyCount := 5
+
 	currentPosX := int32(100)
 	for enemyCount != 0 {
 		newEnemy := Enemy{
@@ -49,17 +43,8 @@ func main() {
 		rl.DrawTexture(backgroundImg, 0, 0, rl.White)
 		rl.DrawTexture(player.img, player.posX, player.posY, rl.White)
 
-		tempSliceE := enemies[:0]
-		for i, enemy := range enemies {
-			if enemy.posY <= 0 {
-				continue
-			}
-			rl.DrawTexture(enemy.img, enemy.posX, enemy.posY, rl.White)
-			tempSliceE = append(tempSliceE, enemies[i])
-		}
-		enemies = tempSliceE
-
 		bullets = drawBullets(bullets)
+		enemies = drawEnemies(enemies)
 
 		isInputtingRight := rl.IsKeyDown(rl.KeyD) || rl.IsKeyDown(rl.KeyRight)
 		if isInputtingRight && !(player.posX > (screenSize - 75)) {
