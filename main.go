@@ -4,14 +4,6 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-type Bullet struct {
-	posX      int32
-	posY      int32
-	velocity  int32
-	hitRadius float32
-	color     rl.Color
-}
-
 type Enemy struct {
 	posX int32
 	posY int32
@@ -32,7 +24,7 @@ func main() {
 	enemyImg := rl.LoadTexture("assets/enemy.png")
 
 	enemyCount := 5
-	currentPosX := int32(75)
+	currentPosX := int32(100)
 	for enemyCount != 0 {
 		newEnemy := Enemy{
 			posX: currentPosX,
@@ -62,17 +54,7 @@ func main() {
 		}
 		enemies = tempSliceE
 
-		tempSlice := bullets[:0]
-		for i, bullet := range bullets {
-			if bullet.posY <= 0 {
-				shouldShoot = true
-				continue
-			}
-			bullets[i].posY = bullets[i].posY - int32(bullet.velocity)
-			rl.DrawCircle(bullet.posX, bullet.posY, bullet.hitRadius, bullet.color)
-			tempSlice = append(tempSlice, bullets[i])
-		}
-		bullets = tempSlice
+		bullets = drawBullets(bullets)
 
 		isInputtingRight := rl.IsKeyDown(rl.KeyD) || rl.IsKeyDown(rl.KeyRight)
 		isInputtingLeft := rl.IsKeyDown((rl.KeyA)) || rl.IsKeyDown(rl.KeyLeft)
