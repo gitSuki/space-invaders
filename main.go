@@ -57,25 +57,18 @@ func main() {
 		bullets = drawBullets(bullets)
 
 		isInputtingRight := rl.IsKeyDown(rl.KeyD) || rl.IsKeyDown(rl.KeyRight)
-		isInputtingLeft := rl.IsKeyDown((rl.KeyA)) || rl.IsKeyDown(rl.KeyLeft)
-
 		if isInputtingRight && !(playerCoordinates[0] > (screenSize - 75)) {
 			playerCoordinates[0] += 5
 		}
+
+		isInputtingLeft := rl.IsKeyDown((rl.KeyA)) || rl.IsKeyDown(rl.KeyLeft)
 		if isInputtingLeft && !(playerCoordinates[0] <= 25) {
 			playerCoordinates[0] -= 5
 		}
 
-		if rl.IsKeyDown(rl.KeySpace) && shouldShoot {
-			newBullet := Bullet{
-				posX:      playerCoordinates[0],
-				posY:      playerCoordinates[1],
-				velocity:  10,
-				hitRadius: float32(10),
-				color:     rl.Red,
-			}
-			bullets = append(bullets, newBullet)
-			shouldShoot = false
+		isInputtingShoot := rl.IsKeyDown(rl.KeySpace)
+		if isInputtingShoot && shouldShoot {
+			bullets = appendBullet(bullets, playerCoordinates[0], playerCoordinates[1])
 		}
 
 		rl.EndDrawing()

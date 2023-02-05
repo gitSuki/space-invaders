@@ -10,6 +10,18 @@ type Bullet struct {
 	color     rl.Color
 }
 
+// Appends a new bullet to the given array of bullets
+func appendBullet(b []Bullet, x int32, y int32) []Bullet {
+	newBullet := Bullet{
+		posX:      x,
+		posY:      y,
+		velocity:  10,
+		hitRadius: float32(10),
+		color:     rl.Red,
+	}
+	return append(b, newBullet)
+}
+
 // Draws the bullets on the screen and calculates their movement.
 func drawBullets(b []Bullet) []Bullet {
 	// uses a temporary array slice to be able to loop over the list while also
