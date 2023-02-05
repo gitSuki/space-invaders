@@ -9,7 +9,7 @@ import (
 type Bullet struct {
 	posX      int32
 	posY      int32
-	velocity  float32
+	velocity  int32
 	hitRadius float32
 	color     rl.Color
 }
@@ -18,11 +18,14 @@ func main() {
 	screenSize := int32(600)
 	playerCoordinates := [2]int32{25, 525}
 	bullets := []Bullet{}
+	shouldShoot := true
 
 	rl.InitWindow(screenSize, screenSize, "Space Invaders")
 
 	backgroundImg := rl.LoadTexture("assets/space_background.png")
 	playerImg := rl.LoadTexture("assets/player.png")
+
+	rl.SetTargetFPS(60)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
@@ -33,6 +36,7 @@ func main() {
 		tempSlice := bullets[:0]
 		for i, bullet := range bullets {
 			if bullet.posY <= 0 {
+				shouldShoot = true
 				continue
 			}
 			bullets[i].posY = bullets[i].posY - int32(bullet.velocity)
@@ -45,21 +49,22 @@ func main() {
 		isInputtingLeft := rl.IsKeyDown((rl.KeyA)) || rl.IsKeyDown(rl.KeyLeft)
 
 		if isInputtingRight && !(playerCoordinates[0] > (screenSize - 75)) {
-			playerCoordinates[0] += 1
+			playerCoordinates[0] += 5
 		}
 		if isInputtingLeft && !(playerCoordinates[0] <= 25) {
-			playerCoordinates[0] -= 1
+			playerCoordinates[0] -= 5
 		}
 
-		if rl.IsKeyDown(rl.KeySpace) {
+		if rl.IsKeyDown(rl.KeySpace) && shouldShoot {
 			newBullet := Bullet{
 				posX:      playerCoordinates[0],
 				posY:      playerCoordinates[1],
-				velocity:  3,
+				velocity:  10,
 				hitRadius: float32(10),
 				color:     rl.Red,
 			}
 			bullets = append(bullets, newBullet)
+			shouldShoot = false
 			fmt.Println(bullets)
 		}
 
