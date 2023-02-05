@@ -12,17 +12,21 @@ type Enemy struct {
 
 func main() {
 	screenSize := int32(600)
-	playerCoordinates := [2]int32{25, 525}
-	bullets := []Bullet{}
-	enemies := []Enemy{}
-	shouldShoot := true
-	framesUntilCanShoot := int32(0)
-
 	rl.InitWindow(screenSize, screenSize, "Space Invaders")
 
 	backgroundImg := rl.LoadTexture("assets/space_background.png")
 	playerImg := rl.LoadTexture("assets/player.png")
 	enemyImg := rl.LoadTexture("assets/enemy.png")
+
+	player := Player{
+		posX:                25,
+		posY:                525,
+		canShoot:            true,
+		framesUntilCanShoot: 0,
+		img:                 playerImg,
+	}
+	bullets := []Bullet{}
+	enemies := []Enemy{}
 
 	enemyCount := 5
 	currentPosX := int32(100)
@@ -43,7 +47,7 @@ func main() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
 		rl.DrawTexture(backgroundImg, 0, 0, rl.White)
-		rl.DrawTexture(playerImg, playerCoordinates[0], playerCoordinates[1], rl.White)
+		rl.DrawTexture(player.img, player.posX, player.posY, rl.White)
 
 		tempSliceE := enemies[:0]
 		for i, enemy := range enemies {
@@ -58,26 +62,26 @@ func main() {
 		bullets = drawBullets(bullets)
 
 		isInputtingRight := rl.IsKeyDown(rl.KeyD) || rl.IsKeyDown(rl.KeyRight)
-		if isInputtingRight && !(playerCoordinates[0] > (screenSize - 75)) {
-			playerCoordinates[0] += 5
+		if isInputtingRight && !(player.posX > (screenSize - 75)) {
+			player.posX += 5
 		}
 
 		isInputtingLeft := rl.IsKeyDown((rl.KeyA)) || rl.IsKeyDown(rl.KeyLeft)
-		if isInputtingLeft && !(playerCoordinates[0] <= 25) {
-			playerCoordinates[0] -= 5
+		if isInputtingLeft && !(player.posX <= 25) {
+			player.posX -= 5
 		}
 
 		isInputtingShoot := rl.IsKeyDown(rl.KeySpace)
-		if isInputtingShoot && shouldShoot {
-			bullets = appendBullet(bullets, playerCoordinates[0], playerCoordinates[1])
-			shouldShoot = false
-			framesUntilCanShoot = 30
+		if isInputtingShoot && player.canShoot {
+			bullets = appendBullet(bullets, player.posX, player.posY)
+			player.canShoot = false
+			player.framesUntilCanShoot = 30
 		}
 
-		if framesUntilCanShoot > 0 {
-			framesUntilCanShoot--
-			if framesUntilCanShoot == 0 {
-				shouldShoot = true
+		if player.framesUntilCanShoot > 0 {
+			player.framesUntilCanShoot--
+			if player.framesUntilCanShoot == 0 {
+				player.canShoot = true
 			}
 		}
 
