@@ -3,21 +3,23 @@ package main
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 type Bullet struct {
-	posX      int32
-	posY      int32
-	velocity  int32
-	hitRadius float32
-	color     rl.Color
+	posX     int32
+	posY     int32
+	velocity int32
+	width    int32
+	height   int32
+	color    rl.Color
 }
 
 // Appends a new bullet to the given array of bullets
 func appendBullet(b []Bullet, x int32, y int32) []Bullet {
 	newBullet := Bullet{
-		posX:      x,
-		posY:      y,
-		velocity:  10,
-		hitRadius: float32(10),
-		color:     rl.Red,
+		posX:     x + 22, // offset to make bullet origin at the player's center
+		posY:     y,
+		velocity: 10,
+		width:    5,
+		height:   15,
+		color:    rl.Red,
 	}
 	return append(b, newBullet)
 }
@@ -34,7 +36,7 @@ func drawBullets(b []Bullet) []Bullet {
 			continue
 		}
 		b[i].posY = b[i].posY - bullet.velocity
-		rl.DrawCircle(bullet.posX, bullet.posY, bullet.hitRadius, bullet.color)
+		rl.DrawRectangle(bullet.posX, bullet.posY, bullet.width, bullet.height, bullet.color)
 		tempSlice = append(tempSlice, b[i])
 	}
 	return tempSlice
