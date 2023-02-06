@@ -43,7 +43,7 @@ func main() {
 		rl.DrawTexture(backgroundImg, 0, 0, rl.White)
 		rl.DrawTexture(player.img, player.posX, player.posY, rl.White)
 
-		bullets = drawBullets(bullets)
+		bullets = drawBullets(bullets, enemies)
 		enemies = drawEnemies(enemies, player)
 
 		isInputtingRight := rl.IsKeyDown(rl.KeyD) || rl.IsKeyDown(rl.KeyRight)

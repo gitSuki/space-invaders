@@ -1,10 +1,6 @@
 package main
 
-import (
-	"fmt"
-
-	rl "github.com/gen2brain/raylib-go/raylib"
-)
+import rl "github.com/gen2brain/raylib-go/raylib"
 
 type Enemy struct {
 	posX int32
@@ -16,7 +12,7 @@ type Enemy struct {
 func drawEnemies(e []Enemy, p Player) []Enemy {
 	// uses a temporary array slice to be able to loop over the list while also
 	// deleting the enemies that go off screen
-	tempSlice := e[:0]
+	var tempSlice []Enemy
 	for i, enemy := range e {
 		if enemy.posY <= 0 {
 			// deletes by not adding any enemies which have gone off screen to
@@ -47,7 +43,6 @@ func kinematicSeek(e Enemy, t Player) rl.Vector2 {
 		X: float32(t.posX),
 		Y: float32(t.posY),
 	}
-	fmt.Println(playerPos)
 	velocity := rl.Vector2Subtract(playerPos, enemyPos)
 	velocity = rl.Vector2Normalize(velocity)
 	velocity = rl.Vector2Scale(velocity, maxSpeed)
