@@ -3,9 +3,10 @@ package main
 import rl "github.com/gen2brain/raylib-go/raylib"
 
 type Enemy struct {
-	posX int32
-	posY int32
-	img  rl.Texture2D
+	posX      int32
+	posY      int32
+	img       rl.Texture2D
+	collision rl.Rectangle
 }
 
 // Draws enemies on the screen
@@ -27,6 +28,7 @@ func drawEnemies(e []Enemy, p Player) []Enemy {
 		newLocation := rl.Vector2Add(enemyPos, velocity)
 		e[i].posX = int32(newLocation.X)
 		e[i].posY = int32(newLocation.Y)
+		e[i].collision = rl.NewRectangle(float32(e[i].posX), float32(e[i].posY), float32(60), float32(32))
 		rl.DrawTexture(enemy.img, e[i].posX, e[i].posY, rl.White)
 		tempSlice = append(tempSlice, e[i])
 	}

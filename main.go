@@ -26,9 +26,10 @@ func main() {
 	currentPosX := int32(100)
 	for enemyCount != 0 {
 		newEnemy := Enemy{
-			posX: currentPosX,
-			posY: 25,
-			img:  enemyImg,
+			posX:      currentPosX,
+			posY:      25,
+			img:       enemyImg,
+			collision: rl.NewRectangle(float32(currentPosX), 25, 60, 32),
 		}
 		enemies = append(enemies, newEnemy)
 		enemyCount--
