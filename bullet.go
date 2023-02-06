@@ -26,7 +26,8 @@ func appendBullet(b []Bullet, x int32, y int32) []Bullet {
 	return append(b, newBullet)
 }
 
-// Draws the bullets on the screen and calculates their movement.
+// Draws the bullets on the screen, calculates their movement, and checks for collisions with
+// enemies. Which removes both the bullet and the enemy.
 func drawBullets(b []Bullet, e []Enemy, score *int) ([]Bullet, []Enemy, int) {
 	// uses a temporary array slice to be able to loop over the list while also
 	// deleting the bullets that go off screen
@@ -43,24 +44,29 @@ func drawBullets(b []Bullet, e []Enemy, score *int) ([]Bullet, []Enemy, int) {
 			// the temporary slice
 			continue
 		}
+		// loops through the list of enemies to detect collisions
 		for j := range e {
-			collidedWithEnemy = checkForCollision(b[i], e[j])
+			collidedWithEnemy = checkBulletCollision(b[i], e[j])
 			if collidedWithEnemy {
 				collidedEnemyIndex = j
 				newScore = *score + 50
 				break
 			}
 		}
-		if !collidedWithEnemy {
+		if collidedWithEnemy {
+			// removes the enemy and the bullet
+			enemySlice = append(e[:collidedEnemyIndex], e[collidedEnemyIndex+1:]...)
+			enemyShouldBeRemoved = true
+		} else {
+			// keeps the bullet in the slice if it hasn't collided
 			b[i].posY = b[i].posY - b[i].speed
 			b[i].collision = rl.NewRectangle(float32(b[i].posX), float32(b[i].posY), float32(b[i].width), float32(b[i].height))
 			rl.DrawRectangle(b[i].posX, b[i].posY, b[i].width, b[i].height, b[i].color)
 			bulletSlice = append(bulletSlice, b[i])
-		} else {
-			enemySlice = append(e[:collidedEnemyIndex], e[collidedEnemyIndex+1:]...)
-			enemyShouldBeRemoved = true
 		}
 	}
+	// needs to return a boolean in the case of collision with an enemy
+	// in order to update the slice of enemies and the score
 	if enemyShouldBeRemoved {
 		return bulletSlice, enemySlice, newScore
 	} else {
@@ -68,7 +74,7 @@ func drawBullets(b []Bullet, e []Enemy, score *int) ([]Bullet, []Enemy, int) {
 	}
 }
 
-func checkForCollision(b Bullet, e Enemy) bool {
+func checkBulletCollision(b Bullet, e Enemy) bool {
 	if rl.CheckCollisionRecs(b.collision, e.collision) {
 		return true
 	} else {

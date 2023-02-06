@@ -18,22 +18,8 @@ func main() {
 	enemyImg := rl.LoadTexture("assets/enemy.png")
 
 	player := createPlayer(playerImg)
+	enemies := createEnemies(enemyImg)
 	bullets := []Bullet{}
-	enemies := []Enemy{}
-	enemyCount := 5
-
-	currentPosX := int32(100)
-	for enemyCount != 0 {
-		newEnemy := Enemy{
-			posX:      currentPosX,
-			posY:      25,
-			img:       enemyImg,
-			collision: rl.NewRectangle(float32(currentPosX), 25, 44, 32),
-		}
-		enemies = append(enemies, newEnemy)
-		enemyCount--
-		currentPosX += 100
-	}
 
 	rl.SetTargetFPS(60)
 
@@ -57,7 +43,6 @@ func main() {
 			} else {
 				rl.DrawText("You Won! Your score was: "+strconv.Itoa(int(score)), 150, screenSize/2, 20, rl.Green)
 			}
-
 		}
 
 		bullets, enemies, score = drawBullets(bullets, enemies, &score)

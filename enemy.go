@@ -9,7 +9,26 @@ type Enemy struct {
 	collision rl.Rectangle
 }
 
-// Draws enemies on the screen
+// Creates a slice of 5 enemies at their default starting coordinates
+func createEnemies(img rl.Texture2D) []Enemy {
+	var enemies []Enemy
+	enemyCount := 5
+	currentPosX := int32(100)
+	for enemyCount != 0 {
+		newEnemy := Enemy{
+			posX:      currentPosX,
+			posY:      25,
+			img:       img,
+			collision: rl.NewRectangle(float32(currentPosX), 25, 44, 32),
+		}
+		enemies = append(enemies, newEnemy)
+		enemyCount--
+		currentPosX += 100
+	}
+	return enemies
+}
+
+// Draws enemies on the screen and checks for collisions with the player (which triggers game over).
 func drawEnemies(e []Enemy, p Player, isLoss *bool) ([]Enemy, bool) {
 	// uses a temporary array slice to be able to loop over the list while also
 	// deleting the enemies that go off screen
@@ -21,12 +40,15 @@ func drawEnemies(e []Enemy, p Player, isLoss *bool) ([]Enemy, bool) {
 			// the temporary slice
 			continue
 		}
-		collidedWithPlayer := checkForPlayerCollision(p, e[i])
+		// sets the return boolean to true to trigger a game end state
+		// if one of the enemies has collided with the player
+		collidedWithPlayer := checkPlayerCollision(p, e[i])
 		if collidedWithPlayer {
 			enemyHasWon = true
 			break
 		}
 
+		// adjusts the enemies positioning based on their velocity
 		enemyPos := rl.Vector2{
 			X: float32(enemy.posX),
 			Y: float32(enemy.posY),
@@ -39,6 +61,8 @@ func drawEnemies(e []Enemy, p Player, isLoss *bool) ([]Enemy, bool) {
 		rl.DrawTexture(enemy.img, e[i].posX, e[i].posY, rl.White)
 		tempSlice = append(tempSlice, e[i])
 	}
+	// needs to return a boolean in the case of collision with a player
+	// in order to trigger a gameover state
 	if enemyHasWon {
 		return tempSlice, enemyHasWon
 	} else {
@@ -62,7 +86,7 @@ func kinematicSeek(e Enemy, t Player) rl.Vector2 {
 	return velocity
 }
 
-func checkForPlayerCollision(p Player, e Enemy) bool {
+func checkPlayerCollision(p Player, e Enemy) bool {
 	if rl.CheckCollisionRecs(p.collision, e.collision) {
 		return true
 	} else {
