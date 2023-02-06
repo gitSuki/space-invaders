@@ -60,12 +60,16 @@ func main() {
 
 		isInputtingRight := rl.IsKeyDown(rl.KeyD) || rl.IsKeyDown(rl.KeyRight)
 		if isInputtingRight && !(player.posX > (screenSize - 75)) {
-			player.posX += 5
+			newPosX := player.posX + 5
+			player.posX = newPosX
+			player.collision = rl.NewRectangle(float32(newPosX), player.collision.Y, player.collision.Width, player.collision.Height)
 		}
 
 		isInputtingLeft := rl.IsKeyDown((rl.KeyA)) || rl.IsKeyDown(rl.KeyLeft)
 		if isInputtingLeft && !(player.posX <= 25) {
-			player.posX -= 5
+			newPosX := player.posX - 5
+			player.posX = newPosX
+			player.collision = rl.NewRectangle(float32(newPosX), player.collision.Y, player.collision.Width, player.collision.Height)
 		}
 
 		isInputtingShoot := rl.IsKeyDown(rl.KeySpace)
@@ -81,7 +85,6 @@ func main() {
 				player.canShoot = true
 			}
 		}
-
 		rl.EndDrawing()
 	}
 	rl.CloseWindow()
