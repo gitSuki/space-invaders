@@ -16,13 +16,7 @@ func main() {
 	playerImg := rl.LoadTexture("assets/player.png")
 	enemyImg := rl.LoadTexture("assets/enemy.png")
 
-	player := Player{
-		posX:                25,
-		posY:                525,
-		canShoot:            true,
-		framesUntilCanShoot: 0,
-		img:                 playerImg,
-	}
+	player := createPlayer(playerImg)
 	bullets := []Bullet{}
 	enemies := []Enemy{}
 	enemyCount := 5
