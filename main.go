@@ -29,7 +29,7 @@ func main() {
 			posX:      currentPosX,
 			posY:      25,
 			img:       enemyImg,
-			collision: rl.NewRectangle(float32(currentPosX), 25, 60, 32),
+			collision: rl.NewRectangle(float32(currentPosX), 25, 44, 32),
 		}
 		enemies = append(enemies, newEnemy)
 		enemyCount--

@@ -41,8 +41,9 @@ func drawBullets(b []Bullet, e []Enemy) []Bullet {
 			continue
 		}
 		for j := range e {
-			if rl.CheckCollisionRecs(b[i].collision, e[j].collision) {
-				collidedWithEnemy = true
+			collidedWithEnemy = checkForCollision(b[i], e[j])
+			if collidedWithEnemy {
+				break
 			}
 		}
 		if !collidedWithEnemy {
@@ -53,4 +54,12 @@ func drawBullets(b []Bullet, e []Enemy) []Bullet {
 		}
 	}
 	return tempSlice
+}
+
+func checkForCollision(b Bullet, e Enemy) bool {
+	if rl.CheckCollisionRecs(b.collision, e.collision) {
+		return true
+	} else {
+		return false
+	}
 }

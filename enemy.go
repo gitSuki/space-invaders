@@ -28,7 +28,7 @@ func drawEnemies(e []Enemy, p Player) []Enemy {
 		newLocation := rl.Vector2Add(enemyPos, velocity)
 		e[i].posX = int32(newLocation.X)
 		e[i].posY = int32(newLocation.Y)
-		e[i].collision = rl.NewRectangle(float32(e[i].posX), float32(e[i].posY), float32(60), float32(32))
+		e[i].collision = rl.NewRectangle(float32(e[i].posX), float32(e[i].posY), float32(44), float32(32))
 		rl.DrawTexture(enemy.img, e[i].posX, e[i].posY, rl.White)
 		tempSlice = append(tempSlice, e[i])
 	}
