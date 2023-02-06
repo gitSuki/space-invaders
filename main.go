@@ -9,7 +9,8 @@ import (
 func main() {
 	screenSize := int32(600)
 	rl.InitWindow(screenSize, screenSize, "Space Invaders")
-	gameover := false
+	isVictory := false
+	isLoss := false
 	score := int(0)
 
 	backgroundImg := rl.LoadTexture("assets/space_background.png")
@@ -44,19 +45,23 @@ func main() {
 		rl.DrawTexture(player.img, player.posX, player.posY, rl.White)
 
 		if len(enemies) == 0 {
-			gameover = true
+			isVictory = true
 		}
-		if gameover {
+		if isVictory || isLoss {
 			enemies = nil
 			bullets = nil
 			player.posX = screenSize
 			player.posY = screenSize
-			rl.UnloadTexture(backgroundImg)
-			rl.DrawText("You Won! Your score was: "+strconv.Itoa(int(score)), 125, screenSize/2, 20, rl.LightGray)
+			if isLoss {
+				rl.DrawText("You Lost! Your score was: "+strconv.Itoa(int(score)), 150, screenSize/2, 20, rl.Red)
+			} else {
+				rl.DrawText("You Won! Your score was: "+strconv.Itoa(int(score)), 150, screenSize/2, 20, rl.Green)
+			}
+
 		}
 
 		bullets, enemies, score = drawBullets(bullets, enemies, &score)
-		enemies = drawEnemies(enemies, player)
+		enemies, isLoss = drawEnemies(enemies, player, &isLoss)
 
 		isInputtingRight := rl.IsKeyDown(rl.KeyD) || rl.IsKeyDown(rl.KeyRight)
 		if isInputtingRight && !(player.posX > (screenSize - 75)) {

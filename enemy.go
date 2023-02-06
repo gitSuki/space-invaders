@@ -10,16 +10,23 @@ type Enemy struct {
 }
 
 // Draws enemies on the screen
-func drawEnemies(e []Enemy, p Player) []Enemy {
+func drawEnemies(e []Enemy, p Player, isLoss *bool) ([]Enemy, bool) {
 	// uses a temporary array slice to be able to loop over the list while also
 	// deleting the enemies that go off screen
 	var tempSlice []Enemy
+	enemyHasWon := false
 	for i, enemy := range e {
 		if enemy.posY <= 0 {
 			// deletes by not adding any enemies which have gone off screen to
 			// the temporary slice
 			continue
 		}
+		collidedWithPlayer := checkForPlayerCollision(p, e[i])
+		if collidedWithPlayer {
+			enemyHasWon = true
+			break
+		}
+
 		enemyPos := rl.Vector2{
 			X: float32(enemy.posX),
 			Y: float32(enemy.posY),
@@ -32,7 +39,11 @@ func drawEnemies(e []Enemy, p Player) []Enemy {
 		rl.DrawTexture(enemy.img, e[i].posX, e[i].posY, rl.White)
 		tempSlice = append(tempSlice, e[i])
 	}
-	return tempSlice
+	if enemyHasWon {
+		return tempSlice, enemyHasWon
+	} else {
+		return tempSlice, *isLoss
+	}
 }
 
 func kinematicSeek(e Enemy, t Player) rl.Vector2 {
@@ -49,4 +60,12 @@ func kinematicSeek(e Enemy, t Player) rl.Vector2 {
 	velocity = rl.Vector2Normalize(velocity)
 	velocity = rl.Vector2Scale(velocity, maxSpeed)
 	return velocity
+}
+
+func checkForPlayerCollision(p Player, e Enemy) bool {
+	if rl.CheckCollisionRecs(p.collision, e.collision) {
+		return true
+	} else {
+		return false
+	}
 }
