@@ -27,11 +27,12 @@ func appendBullet(b []Bullet, x int32, y int32) []Bullet {
 }
 
 // Draws the bullets on the screen and calculates their movement.
-func drawBullets(b []Bullet, e []Enemy) ([]Bullet, []Enemy) {
+func drawBullets(b []Bullet, e []Enemy, score *int) ([]Bullet, []Enemy, int) {
 	// uses a temporary array slice to be able to loop over the list while also
 	// deleting the bullets that go off screen
 	var bulletSlice []Bullet
 	var enemySlice []Enemy
+	var newScore int
 	enemyShouldBeRemoved := false
 	for i := range b {
 		var collidedEnemyIndex int
@@ -46,6 +47,7 @@ func drawBullets(b []Bullet, e []Enemy) ([]Bullet, []Enemy) {
 			collidedWithEnemy = checkForCollision(b[i], e[j])
 			if collidedWithEnemy {
 				collidedEnemyIndex = j
+				newScore = *score + 50
 				break
 			}
 		}
@@ -60,9 +62,9 @@ func drawBullets(b []Bullet, e []Enemy) ([]Bullet, []Enemy) {
 		}
 	}
 	if enemyShouldBeRemoved {
-		return bulletSlice, enemySlice
+		return bulletSlice, enemySlice, newScore
 	} else {
-		return bulletSlice, e
+		return bulletSlice, e, *score
 	}
 }
 

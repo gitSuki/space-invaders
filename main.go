@@ -1,12 +1,15 @@
 package main
 
 import (
+	"strconv"
+
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
 func main() {
 	screenSize := int32(600)
 	rl.InitWindow(screenSize, screenSize, "Space Invaders")
+	score := int(0)
 
 	backgroundImg := rl.LoadTexture("assets/space_background.png")
 	playerImg := rl.LoadTexture("assets/player.png")
@@ -42,9 +45,11 @@ func main() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
 		rl.DrawTexture(backgroundImg, 0, 0, rl.White)
+		rl.DrawText("Score: "+strconv.Itoa(int(score)), 5, 5, 20, rl.LightGray)
+
 		rl.DrawTexture(player.img, player.posX, player.posY, rl.White)
 
-		bullets, enemies = drawBullets(bullets, enemies)
+		bullets, enemies, score = drawBullets(bullets, enemies, &score)
 		enemies = drawEnemies(enemies, player)
 
 		isInputtingRight := rl.IsKeyDown(rl.KeyD) || rl.IsKeyDown(rl.KeyRight)
