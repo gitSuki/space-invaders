@@ -44,7 +44,7 @@ func main() {
 		rl.DrawTexture(player.img, player.posX, player.posY, rl.White)
 
 		bullets = drawBullets(bullets)
-		enemies = drawEnemies(enemies)
+		enemies = drawEnemies(enemies, player)
 
 		isInputtingRight := rl.IsKeyDown(rl.KeyD) || rl.IsKeyDown(rl.KeyRight)
 		if isInputtingRight && !(player.posX > (screenSize - 75)) {
