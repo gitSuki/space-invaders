@@ -29,12 +29,16 @@ func appendBullet(b []Bullet, x int32, y int32) []Bullet {
 }
 
 // Draws the bullets on the screen and calculates their movement.
-func drawBullets(b []Bullet, e []Enemy) []Bullet {
+func drawBullets(b []Bullet, e []Enemy) ([]Bullet, []Enemy) {
 	// uses a temporary array slice to be able to loop over the list while also
 	// deleting the bullets that go off screen
-	var tempSlice []Bullet
+	var bulletSlice []Bullet
+	var enemySlice []Enemy
+	enemyShouldBeRemoved := false
 	for i := range b {
+		var collidedEnemyIndex int
 		collidedWithEnemy := false
+
 		if b[i].posY <= 0 {
 			// deletes by not adding any bullets which have gone off screen to
 			// the temporary slice
@@ -43,6 +47,7 @@ func drawBullets(b []Bullet, e []Enemy) []Bullet {
 		for j := range e {
 			collidedWithEnemy = checkForCollision(b[i], e[j])
 			if collidedWithEnemy {
+				collidedEnemyIndex = j
 				break
 			}
 		}
@@ -50,10 +55,17 @@ func drawBullets(b []Bullet, e []Enemy) []Bullet {
 			b[i].posY = b[i].posY - b[i].speed
 			b[i].collision = rl.NewRectangle(float32(b[i].posX), float32(b[i].posY), float32(b[i].width), float32(b[i].height))
 			rl.DrawRectangle(b[i].posX, b[i].posY, b[i].width, b[i].height, b[i].color)
-			tempSlice = append(tempSlice, b[i])
+			bulletSlice = append(bulletSlice, b[i])
+		} else {
+			enemySlice = append(e[:collidedEnemyIndex], e[collidedEnemyIndex+1:]...)
+			enemyShouldBeRemoved = true
 		}
 	}
-	return tempSlice
+	if enemyShouldBeRemoved {
+		return bulletSlice, enemySlice
+	} else {
+		return bulletSlice, e
+	}
 }
 
 func checkForCollision(b Bullet, e Enemy) bool {
